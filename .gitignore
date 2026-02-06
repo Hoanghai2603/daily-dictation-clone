@@ -36,3 +36,9 @@ pnpm-debug.log*
 
 # Agent
 /.agent
+
+# docs
+dailydictation-build.md
+docs.md
+requirements.md
+task.md
