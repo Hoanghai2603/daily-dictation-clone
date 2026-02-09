@@ -1,39 +1,42 @@
-import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 
 export const DashboardPage = () => {
     return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">Total Users</h3>
-                    <p className="text-3xl font-bold text-gray-800 mt-2">1,234</p>
-                    <div className="mt-4 text-green-600 text-sm font-medium flex items-center">
-                        <span>+12% from last month</span>
-                    </div>
-                </div>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center animate-in fade-in duration-700">
+            <h1 className="text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl">
+                Welcome to Daily Dictation Admin
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-[600px]">
+                Manage your topics, exercises, and track user progress from this central dashboard.
+            </p>
 
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">Active Exercises</h3>
-                    <p className="text-3xl font-bold text-gray-800 mt-2">56</p>
-                    <div className="mt-4 text-blue-600 text-sm font-medium flex items-center">
-                        <span>4 new this week</span>
-                    </div>
-                </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-8 w-full max-w-4xl px-4">
+                <Card className="hover:bg-accent transition-colors cursor-pointer border-l-4 border-l-primary">
+                    <CardHeader>
+                        <CardTitle className="text-lg">Manage Topics</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">currrently available topics and their difficulty levels.</p>
+                    </CardContent>
+                </Card>
 
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">Completed Dictations</h3>
-                    <p className="text-3xl font-bold text-gray-800 mt-2">8,921</p>
-                    <div className="mt-4 text-purple-600 text-sm font-medium flex items-center">
-                        <span>+8% from last week</span>
-                    </div>
-                </div>
-            </div>
+                <Card className="hover:bg-accent transition-colors cursor-pointer border-l-4 border-l-blue-500">
+                    <CardHeader>
+                        <CardTitle className="text-lg">Manage Exercises</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">Create, edit, and publish dictation exercises.</p>
+                    </CardContent>
+                </Card>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
-                <div className="text-gray-500 text-center py-10">
-                    Chart placeholder
-                </div>
+                <Card className="hover:bg-muted transition-colors opacity-70 border-l-4 border-l-gray-300">
+                    <CardHeader>
+                        <CardTitle className="text-lg">User Analytics</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground">View user engagement and progress (Coming Soon).</p>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );

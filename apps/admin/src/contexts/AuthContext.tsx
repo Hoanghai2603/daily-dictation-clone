@@ -24,6 +24,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const lastCheckedEmail = useRef<string | null>(null);
 
+    // BYPASS LOGIN FOR DEVELOPMENT TESTING
+    // Remove this logic in production when real auth is needed strict
+    const IS_DEV = import.meta.env.DEV;
+
     const checkAdminStatus = async (email: string | undefined) => {
         if (!email) {
             setIsAdmin(false);
@@ -31,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
-        // Prevent duplicate checks for the same email
+        // Prevent duplicate checks
         if (email === lastCheckedEmail.current) {
             return;
         }
@@ -49,6 +53,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         let mounted = true;
 
+        if (IS_DEV) {
+            console.log("DEV MODE: Auto-bypassing login...");
+            const dummySession = {
+                access_token: "dummy_token",
+                refresh_token: "dummy_refresh",
+                expires_in: 3600,
+                token_type: "bearer",
+                user: {
+                    id: "dev-admin-id",
+                    email: "dev@admin.com",
+                    app_metadata: {},
+                    user_metadata: {},
+                    aud: "authenticated",
+                    created_at: new Date().toISOString()
+                }
+            } as Session;
+
+            setSession(dummySession);
+            setIsAdmin(true);
+            setLoading(false);
+            return;
+        }
+
+        // Normal Production Auth Logic
         const initSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (!mounted) return;
@@ -91,6 +119,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const signOut = async () => {
+        if (IS_DEV) {
+            alert("Sign out is disabled in DEV bypass mode.");
+            return;
+        }
         await supabase.auth.signOut();
         setIsAdmin(false);
         lastCheckedEmail.current = null;
