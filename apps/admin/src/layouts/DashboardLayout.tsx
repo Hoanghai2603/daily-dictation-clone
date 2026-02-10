@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../lib/utils';
 import { Button } from '../components/ui/button';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SidebarItem = ({ to, icon: Icon, children }: { to: string; icon: any; children: React.ReactNode }) => (
     <NavLink
         to={to}

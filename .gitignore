@@ -38,7 +38,10 @@ pnpm-debug.log*
 /.agent
 
 # docs
+dailydictation-clone-plan.md
 dailydictation-build.md
 docs.md
 requirements.md
 task.md
+/docs
+/design-system

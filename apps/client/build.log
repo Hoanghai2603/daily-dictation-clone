@@ -1,0 +1,24 @@
+
+> @daily-dictation/client@0.1.0 build D:\dailyDictationClone\apps\client
+> next build
+
+▲ Next.js 16.1.0 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.5s
+  Running TypeScript ...
+Failed to compile.
+
+./app/page.tsx:49:25
+Type error: The inferred type of 'Home' cannot be named without a reference to '.pnpm/@types+react@19.2.10/node_modules/@types/react'. This is likely not portable. A type annotation is necessary.
+
+[0m [90m 47 |[39m ][33m;[39m
+ [90m 48 |[39m
+[31m[1m>[22m[39m[90m 49 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mHome[39m() {
+ [90m    |[39m                         [31m[1m^[22m[39m
+ [90m 50 |[39m   [36mreturn[39m (
+ [90m 51 |[39m     [33m<[39m[33mmain[39m className[33m=[39m[32m"mx-auto w-full max-w-[1140px] px-3 md:px-[15px] py-4"[39m[33m>[39m
+ [90m 52 |[39m       [33m<[39m[33mdiv[39m className[33m=[39m[32m"mb-4"[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+ ELIFECYCLE  Command failed with exit code 1.

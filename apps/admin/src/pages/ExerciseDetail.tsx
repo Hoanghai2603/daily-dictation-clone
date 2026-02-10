@@ -20,6 +20,7 @@ export const ExerciseDetailPage = () => {
     const [exercise, setExercise] = useState<Exercise | null>(null);
     const [segments, setSegments] = useState<Segment[]>([]);
     const [loading, setLoading] = useState(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const playerRef = useRef<any>(null);
 
     const getYouTubeId = (url: string) => {
@@ -43,6 +44,7 @@ export const ExerciseDetailPage = () => {
                 // Map TranscriptSegment to local Segment type for display
                 // Backend TranscriptSegment: { text: string, duration: number, start: number }
                 // Local Segment: { id, exercise_id, start_time, end_time, content }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const mappedSegments: Segment[] = exerciseData.transcripts.map((t: any, index: number) => ({
                     id: `seg-${index}`,
                     exercise_id: exerciseId,

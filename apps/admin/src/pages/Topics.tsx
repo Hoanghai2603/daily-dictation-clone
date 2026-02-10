@@ -62,7 +62,7 @@ export const Topics = () => {
             setIsModalOpen(false);
             fetchTopics();
         } catch (error) {
-            alert('Error saving topic: ' + (error as any).message);
+            alert('Error saving topic: ' + (error as Error).message);
         }
     };
 
@@ -71,7 +71,7 @@ export const Topics = () => {
         try {
             await topicService.deleteTopic(id);
             fetchTopics();
-        } catch (error) {
+        } catch {
             alert('Error deleting topic');
         }
     };

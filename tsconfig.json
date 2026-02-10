@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "skipLibCheck": true,
+        "paths": {
+            "@daily-dictation/*": [
+                "packages/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        "apps",
+        "packages"
+    ]
+}

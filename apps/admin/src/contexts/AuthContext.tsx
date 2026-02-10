@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import type { Session } from '@supabase/supabase-js';
 
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Remove this logic in production when real auth is needed strict
     const IS_DEV = import.meta.env.DEV;
 
-    const checkAdminStatus = async (email: string | undefined) => {
+    const checkAdminStatus = useCallback(async (email: string | undefined) => {
         if (!email) {
             setIsAdmin(false);
             lastCheckedEmail.current = null;
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         setIsAdmin(!!data);
         lastCheckedEmail.current = email;
-    };
+    }, []);
 
     useEffect(() => {
         let mounted = true;
@@ -70,9 +70,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 }
             } as Session;
 
-            setSession(dummySession);
-            setIsAdmin(true);
-            setLoading(false);
+            setTimeout(() => {
+                setSession(dummySession);
+                setIsAdmin(true);
+                setLoading(false);
+            }, 0);
             return;
         }
 
@@ -107,7 +109,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             mounted = false;
             subscription.unsubscribe();
         };
-    }, []);
+    }, [IS_DEV, checkAdminStatus]);
 
     const signInWithGoogle = async () => {
         await supabase.auth.signInWithOAuth({
@@ -135,4 +137,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

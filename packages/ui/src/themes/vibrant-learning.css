@@ -1,0 +1,77 @@
+@layer base {
+    :root {
+        /* VIBRANT LEARNING LIGHT THEME */
+        --background: 171 77% 96.5%;
+        --foreground: 176 61% 19%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 176 61% 19%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 176 61% 19%;
+
+        --primary: 175 84% 32%;
+        --primary-foreground: 171 77% 96.5%;
+
+        --secondary: 172 66% 50%;
+        --secondary-foreground: 176 61% 19%;
+
+        --muted: 171 30% 90%;
+        --muted-foreground: 176 20% 40%;
+
+        --accent: 20 92% 48%;
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 175 84% 32% / 0.15;
+        --input: 175 84% 32% / 0.15;
+        --ring: 175 84% 32%;
+
+        --radius: 0.75rem;
+
+        --chart-1: 175 84% 32%;
+        --chart-2: 20 92% 48%;
+        --chart-3: 172 66% 50%;
+        --chart-4: 200 80% 50%;
+        --chart-5: 280 65% 60%;
+    }
+
+    .dark {
+        /* DEEP OCEAN DARK THEME */
+        --background: 210 20% 8%;
+        --foreground: 180 15% 90%;
+
+        --card: 210 18% 12%;
+        --card-foreground: 180 15% 90%;
+
+        --popover: 210 18% 12%;
+        --popover-foreground: 180 15% 90%;
+
+        --primary: 175 70% 42%;
+        --primary-foreground: 210 20% 8%;
+
+        --secondary: 210 15% 18%;
+        --secondary-foreground: 180 15% 90%;
+
+        --muted: 210 15% 16%;
+        --muted-foreground: 210 10% 55%;
+
+        --accent: 20 92% 52%;
+        --accent-foreground: 0 0% 100%;
+
+        --destructive: 0 72% 50%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 210 15% 20%;
+        --input: 210 15% 20%;
+        --ring: 175 70% 42%;
+
+        --chart-1: 175 70% 42%;
+        --chart-2: 20 92% 52%;
+        --chart-3: 172 55% 45%;
+        --chart-4: 200 70% 55%;
+        --chart-5: 280 55% 55%;
+    }
+}

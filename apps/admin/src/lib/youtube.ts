@@ -17,7 +17,7 @@ export const fetchYoutubeTranscript = async (videoId: string): Promise<Transcrip
         // So we can map directly, or if it exactly matches, just return it.
         // Let's map to be safe and ensure types.
 
-        return transcriptItems.map((item: any) => ({
+        return transcriptItems.map((item: TranscriptSegment) => ({
             start: item.start,
             duration: item.duration,
             text: item.text

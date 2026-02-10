@@ -1,4 +1,4 @@
-import { Button } from '@daily-dictation/ui/button';
+import { Button } from "@/components/ui/button"
 import { useRef, useState } from 'react';
 import YouTube from 'react-youtube';
 
@@ -12,6 +12,7 @@ interface Segment {
 export function TranscriptionTool({ youtubeId, onSave }: { youtubeId: string, onSave: (segments: Segment[]) => void }) {
     const [segments, setSegments] = useState<Segment[]>([]);
     const [currentText, setCurrentText] = useState('');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const playerRef = useRef<any>(null);
 
     const addSegment = () => {

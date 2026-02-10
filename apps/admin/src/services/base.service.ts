@@ -3,7 +3,7 @@ import api from '../lib/api';
 
 export class BaseService {
     // Map to store pending GET requests for deduplication
-    private static pendingRequests = new Map<string, Promise<any>>();
+    private static pendingRequests = new Map<string, Promise<unknown>>();
 
     /**
      * Generic GET method with deduplication logic.
@@ -29,12 +29,12 @@ export class BaseService {
         return promise;
     }
 
-    protected async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    protected async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
         const response = await api.post<T>(url, data, config);
         return response.data;
     }
 
-    protected async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    protected async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
         const response = await api.patch<T>(url, data, config);
         return response.data;
     }

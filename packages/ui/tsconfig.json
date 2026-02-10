@@ -1,0 +1,15 @@
+{
+    "extends": "@daily-dictation/typescript-config/react-library.json",
+    "compilerOptions": {
+        "moduleResolution": "Bundler",
+        "module": "ESNext",
+        "outDir": "dist"
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

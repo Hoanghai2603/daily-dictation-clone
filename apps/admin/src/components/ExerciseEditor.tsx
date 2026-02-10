@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { TranscriptionTool } from './TranscriptionTool';
-import { Button } from '@daily-dictation/ui/button';
+import { Button } from "@/components/ui/button"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ExerciseEditor({ exercise, onSave }: { exercise?: any, onSave: () => void }) {
     const [formData, setFormData] = useState(exercise || {
         title: '',
@@ -31,6 +32,7 @@ export function ExerciseEditor({ exercise, onSave }: { exercise?: any, onSave: (
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSegmentsSave = async (segments: any[]) => {
         await fetch('/api/transcripts/bulk', {
             method: 'POST',

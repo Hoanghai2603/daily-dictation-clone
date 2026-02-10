@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface Segment {
+export interface Segment {
     id: string;
     content: string;
     start_time: number;
@@ -39,9 +39,10 @@ export const useDictationStore = create<DictationState>((set, get) => ({
     checkAnswer: () => {
         const { segments, currentIndex, userInput } = get();
         const currentSegment = segments[currentIndex];
+        if (!currentSegment) return;
 
         // Normalize text for comparison (remove punctuation, lower case)
-        const normalize = (text: string) => text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
+        const normalize = (text: string) => text.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "").trim();
 
         const isCorrect = normalize(userInput) === normalize(currentSegment.content);
         set({ isCorrect, mode: 'check' });

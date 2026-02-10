@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -37,6 +37,14 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+const extractYouTubeId = (url: string) => {
+    if (!url) return '';
+    if (url.length === 11) return url;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : '';
+};
+
 export const ExercisesPage = () => {
     const navigate = useNavigate();
     const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -52,7 +60,7 @@ export const ExercisesPage = () => {
     const [lastFetchedId, setLastFetchedId] = useState<string>('');
 
     // Form definition
-    const form = useForm<FormValues>({
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: '',
@@ -66,16 +74,16 @@ export const ExercisesPage = () => {
 
     const watchedYoutubeId = form.watch("youtube_id");
 
-    const fetchTopics = async () => {
+    const fetchTopics = useCallback(async () => {
         try {
             const data = await topicService.getAll();
             if (data) setTopics(data);
         } catch (error) {
             console.error('Failed to fetch topics', error);
         }
-    };
+    }, []);
 
-    const fetchExercises = async () => {
+    const fetchExercises = useCallback(async () => {
         setLoading(true);
         try {
             const filters = (selectedTopicId && selectedTopicId !== 'all') ? { topic_id: selectedTopicId } : {};
@@ -86,35 +94,18 @@ export const ExercisesPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [selectedTopicId]);
 
     useEffect(() => {
         fetchTopics();
-    }, []);
+    }, [fetchTopics]);
 
     useEffect(() => {
         fetchExercises();
-    }, [selectedTopicId]);
+    }, [fetchExercises]);
 
-    const extractYouTubeId = (url: string) => {
-        if (!url) return '';
-        if (url.length === 11) return url;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : '';
-    };
 
-    // Auto-fetch effect
-    useEffect(() => {
-        if (!isModalOpen) return;
-        const currentId = extractYouTubeId(watchedYoutubeId || '');
-        if (currentId && currentId.length === 11 && currentId !== lastFetchedId && !isFetchingCaptions) {
-            const timeoutId = setTimeout(() => {
-                fetchCaptionsForId(currentId, true);
-            }, 500);
-            return () => clearTimeout(timeoutId);
-        }
-    }, [watchedYoutubeId, isModalOpen, lastFetchedId, isFetchingCaptions]);
+
 
     const handleOpenModal = (exercise?: Exercise) => {
         if (exercise) {
@@ -153,7 +144,7 @@ export const ExercisesPage = () => {
             form.setValue('transcripts', segments);
             setLastFetchedId(videoId);
         } catch (error) {
-            console.error(error);
+            console.error('Fetch error:', error);
             if (!isAuto) {
                 alert('Failed to fetch captions. Please check the ID or try again.');
             }
@@ -172,6 +163,18 @@ export const ExercisesPage = () => {
         await fetchCaptionsForId(videoId, false);
     };
 
+    // Auto-fetch effect
+    useEffect(() => {
+        if (!isModalOpen) return;
+        const currentId = extractYouTubeId(watchedYoutubeId || '');
+        if (currentId && currentId.length === 11 && currentId !== lastFetchedId && !isFetchingCaptions) {
+            const timeoutId = setTimeout(() => {
+                fetchCaptionsForId(currentId, true);
+            }, 500);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [watchedYoutubeId, isModalOpen, lastFetchedId, isFetchingCaptions, fetchCaptionsForId]);
+
     const onSubmit = async (values: FormValues) => {
         try {
             const cleanData = {
@@ -188,7 +191,7 @@ export const ExercisesPage = () => {
             setIsModalOpen(false);
             fetchExercises();
         } catch (error) {
-            console.error(error);
+            console.error('Save error:', error);
             alert('Error saving exercise');
         }
     };
@@ -198,7 +201,7 @@ export const ExercisesPage = () => {
         try {
             await exerciseService.deleteExercise(id);
             fetchExercises();
-        } catch (error) {
+        } catch {
             alert('Error deleting exercise');
         }
     };
