@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { userService, type UserProfile } from '@/services/userService';
+import { userService, type UserProfile } from '@/services/user.service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,6 @@ import { Loader2, ArrowLeft, Ban, CheckCircle } from 'lucide-react';
 // Assuming we have basic UI components. If not (since this is new page), might need to use simple HTML or install.
 // I'll assume Badge, Card etc are available or will be replaced with standard HTML if failing.
 
-import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

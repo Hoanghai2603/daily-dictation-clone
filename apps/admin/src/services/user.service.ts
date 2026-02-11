@@ -1,4 +1,4 @@
-import api from '@/lib/api';
+import { BaseService } from './base.service';
 
 export interface UserProfile {
     id: string;
@@ -12,28 +12,30 @@ export interface UserProfile {
     created_at: string;
 }
 
-export const userService = {
+class UserService extends BaseService {
+    private readonly BASE_PATH = '/users';
+
     async getUsers(page = 1, pageSize = 10, search = '') {
-        const response = await api.get('/users', {
+        return this.get<{ data: UserProfile[]; total: number }>(this.BASE_PATH, {
             params: { page, pageSize, search }
         });
-        return response.data;
-    },
+    }
 
     async getUser(id: string) {
-        const response = await api.get(`/users/${id}`);
-        return response.data;
-    },
+        return this.get<{ profile: UserProfile; progress: any[] }>(`${this.BASE_PATH}/${id}`);
+    }
 
     async banUser(id: string) {
-        await api.post(`/users/${id}/ban`);
-    },
+        return this.post(`${this.BASE_PATH}/${id}/ban`);
+    }
 
     async updateUser(id: string, data: Partial<UserProfile>) {
-        await api.patch(`/users/${id}`, data);
-    },
+        return this.patch(`${this.BASE_PATH}/${id}`, data);
+    }
 
     async unbanUser(id: string) {
-        await api.post(`/users/${id}/unban`);
+        return this.post(`${this.BASE_PATH}/${id}/unban`);
     }
-};
+}
+
+export const userService = new UserService();
