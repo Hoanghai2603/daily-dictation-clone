@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { usePathname, useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export function BannedCheck() {
     const router = useRouter()

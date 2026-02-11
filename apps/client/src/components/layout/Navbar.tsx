@@ -12,6 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/lib/supabase/client";
+import { userService } from "@/services/user.service";
 import { LogOut, Menu, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,8 +31,12 @@ export function Navbar(): React.ReactNode {
             setUser(user);
 
             if (user) {
-                const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-                setProfile(data);
+                try {
+                    const { profile } = await userService.getUser(user.id);
+                    setProfile(profile);
+                } catch (error) {
+                    console.error("Failed to load profile", error);
+                }
             }
         };
 
@@ -40,8 +45,7 @@ export function Navbar(): React.ReactNode {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
             if (session?.user) {
-                // refresh profile
-                supabase.from('profiles').select('*').eq('id', session.user.id).single().then(({ data }) => setProfile(data));
+                userService.getUser(session.user.id).then(({ profile }) => setProfile(profile)).catch(console.error);
             } else {
                 setProfile(null);
             }
@@ -121,11 +125,8 @@ export function Navbar(): React.ReactNode {
                         </DropdownMenu>
                     ) : (
                         <div className="flex items-center gap-3">
-                            <Button variant="ghost" asChild className="hidden md:inline-flex text-foreground/60 font-bold hover:bg-transparent hover:text-primary">
-                                <Link href="/login">Login</Link>
-                            </Button>
-                            <Button asChild className="bg-accent hover:bg-accent/90 text-white font-black shadow-[0_4px_14px_0_rgba(234,88,12,0.39)] rounded-xl px-8">
-                                <Link href="/register">Register</Link>
+                            <Button asChild className="bg-primary hover:bg-primary/90 text-white font-bold rounded-xl px-8 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20">
+                                <Link href="/login">Get Started</Link>
                             </Button>
                         </div>
                     )}

@@ -49,7 +49,7 @@ export function GoogleAuthButton({ text = "Continue with Google" }: { text?: str
     }
 
     return (
-        <Button variant="outline" type="button" disabled={isLoading} onClick={handleGoogleLogin} className="w-full h-11 font-medium text-base relative overflow-hidden transition-all hover:bg-slate-50 dark:hover:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white">
+        <Button variant="outline" type="button" disabled={isLoading} onClick={handleGoogleLogin} className="w-full h-12 font-bold text-base relative overflow-hidden transition-all shadow-sm border-2 border-primary/20 hover:border-primary/40 text-foreground">
             {isLoading ? (
                 <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></span>
             ) : (

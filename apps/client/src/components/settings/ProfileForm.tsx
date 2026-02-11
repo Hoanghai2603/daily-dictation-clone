@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { createClient } from "@/lib/supabase/client"
+import { userService } from "@/services/user.service"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
@@ -61,19 +62,19 @@ export function ProfileForm(): React.ReactNode {
                 setEmail(user.email || "");
                 setAvatarUrl(user.user_metadata?.avatar_url || "");
 
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('full_name, phone, email, avatar_url')
-                    .eq('id', user.id)
-                    .single();
+                try {
+                    const { profile } = await userService.getUser(user.id);
 
-                if (profile) {
-                    form.reset({
-                        full_name: profile.full_name || user.user_metadata?.full_name || "",
-                        phone: profile.phone || "",
-                        avatar_url: profile.avatar_url || user.user_metadata?.avatar_url || "",
-                    });
-                    if (profile.avatar_url) setAvatarUrl(profile.avatar_url);
+                    if (profile) {
+                        form.reset({
+                            full_name: profile.full_name || user.user_metadata?.full_name || "",
+                            phone: profile.phone || "",
+                            avatar_url: profile.avatar_url || user.user_metadata?.avatar_url || "",
+                        });
+                        if (profile.avatar_url) setAvatarUrl(profile.avatar_url);
+                    }
+                } catch (error) {
+                    console.error("Failed to load profile", error);
                 }
             }
         }
@@ -91,22 +92,11 @@ export function ProfileForm(): React.ReactNode {
         }
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api'}/users/${user.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    full_name: data.full_name,
-                    phone: data.phone,
-                    avatar_url: data.avatar_url || avatarUrl,
-                }),
+            await userService.updateUser(user.id, {
+                full_name: data.full_name,
+                phone: data.phone,
+                avatar_url: data.avatar_url || avatarUrl,
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to update profile');
-            }
 
             toast.success("Profile updated");
             form.reset(data); // Reset form state to make it no longer dirty
