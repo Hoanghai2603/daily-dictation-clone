@@ -7,6 +7,8 @@ import { ExercisesPage } from './pages/Exercises';
 import { ExerciseDetailPage } from './pages/ExerciseDetail';
 import { LoginPage } from './pages/Login';
 import { Topics } from './pages/Topics';
+import { UsersPage } from './pages/UsersPage';
+import { UserDetailPage } from './pages/UserDetailPage';
 
 const App = () => {
   return (
@@ -21,7 +23,8 @@ const App = () => {
               <Route path="topics" element={<Topics />} />
               <Route path="exercises" element={<ExercisesPage />} />
               <Route path="exercises/:id" element={<ExerciseDetailPage />} />
-              <Route path="users" element={<div className="p-10 font-bold text-gray-400">Users Page (Coming Soon)</div>} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="users/:id" element={<UserDetailPage />} />
               <Route path="settings" element={<div className="p-10 font-bold text-gray-400">Settings Page (Coming Soon)</div>} />
             </Route>
           </Route>

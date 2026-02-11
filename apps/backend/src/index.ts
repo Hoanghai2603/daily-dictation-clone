@@ -208,6 +208,96 @@ app.get('/api/youtube-transcript', (req, res) => {
     });
 });
 
+// --- User Routes ---
+
+// GET /api/users - List users with pagination and search
+app.get('/api/users', async (req, res) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
+    const search = req.query.search as string;
+
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    let query = supabase
+        .from('profiles')
+        .select('*', { count: 'exact' })
+        .range(from, to)
+        .order('created_at', { ascending: false });
+
+    if (search) {
+        query = query.ilike('full_name', `%${search}%`);
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ data, count });
+});
+
+// GET /api/users/:id - Get user detail and progress
+app.get('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (profileError) return res.status(500).json({ error: profileError.message });
+
+    // Fetch progress
+    const { data: progress, error: progressError } = await supabase
+        .from('user_progress')
+        .select('*, exercises(title)')
+        .eq('user_id', id);
+
+    if (progressError) return res.status(500).json({ error: progressError.message });
+
+    res.json({ profile, progress });
+});
+
+// PATCH /api/users/:id - Update user profile
+app.patch('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const { full_name, phone, avatar_url } = req.body;
+
+    const { data, error } = await supabase
+        .from('profiles')
+        .update({ full_name, phone, avatar_url, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+
+// POST /api/users/:id/ban - Ban user
+app.post('/api/users/:id/ban', async (req, res) => {
+    const { id } = req.params;
+    const { error } = await supabase
+        .from('profiles')
+        .update({ is_banned: true, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ success: true });
+});
+
+// POST /api/users/:id/unban - Unban user
+app.post('/api/users/:id/unban', async (req, res) => {
+    const { id } = req.params;
+    const { error } = await supabase
+        .from('profiles')
+        .update({ is_banned: false, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+    if (error) return res.status(500).json({ error: error.message });
+    res.json({ success: true });
+});
+
 app.listen(port, () => {
     console.log(`Backend listening at http://localhost:${port}`);
 });
