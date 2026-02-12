@@ -32,7 +32,10 @@ class UserService extends BaseService {
     }
 
     async updateUser(id: string, data: Partial<UserProfile>) {
-        return this.patch<UserProfile>(`${this.BASE_PATH}/${id}`, data);
+        const response = await this.patch<UserProfile>(`${this.BASE_PATH}/${id}`, data);
+        // Invalidate cache for this user
+        this.clearCache(`${this.BASE_PATH}/${id}?`);
+        return response;
     }
 }
 
